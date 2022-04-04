@@ -118,7 +118,7 @@ public class GameWorld extends JPanel{
                 //通过参数e里面提供的一份方法getKeycode() 来获取用户当前按下的按键是什么
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {//判断用户按下的是不是空格键
                     bombEnterAction();
-                    System.out.println("按下了空格键");
+                    System.out.println("按下了空格键哦");
                 }
             }
         };
