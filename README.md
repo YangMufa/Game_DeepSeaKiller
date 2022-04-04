@@ -10,9 +10,6 @@
 项目基本完成，处于试运行阶段，示例网站为当前分支最新代码，
 如果您想查看旧版本，可以到标签中选择对应的版本进行下载
 
-ps: 个人博客在一些逻辑和限制上面考虑还欠周全，存在bug，不影响正常使用，
-后续开发已暂缓，欢迎 pull request，我将在审阅并测试后第一时间通知您
-
 [//]: # ([![python3]&#40;https://img.shields.io/badge/Python-3.9-red.svg&#41;]&#40;https://www.python.org/downloads&#41;)
 [//]: # ([![Django3.2]&#40;https://img.shields.io/badge/Django-3.2.4-green.svg&#41;]&#40;https://docs.djangoproject.com/zh-hans/3.2&#41;)
 [![simpleui](https://img.shields.io/badge/developing%20with-Simpleui-2077ff.svg)](https://github.com/newpanjing/simpleui)
@@ -31,23 +28,13 @@ ps: 个人博客在一些逻辑和限制上面考虑还欠周全，存在bug，�
 ### 示例博客：http://www.muyiafa.com（开发中）
 
 ### 功能点
-* 用户注册，登录，登出，注销，密码邮箱验证重置
-* markdown文章渲染，代码高亮，支持后台markdown编写文章等
-* 文章分类，归档，快捷搜索，标签集
-* 4 种皮肤（清新，清爽，简约，暗黑）切换
-* 文章排行榜 / 最新评论 / 阅读量排行榜
-* 博文评论系统（基本功能）
-* 多目标源博文分享（支持https）
-* echarts 博文发布，标签统计图（折线图，饼图，梯形图）
-* 文章分类 雷达统计图（雷达图）
-* 网站配置数据 redis 缓存
-* windows: django-gzip压缩主站，linux: nginx-gzip压缩全站
-* Rss / Atom 订阅
-* 支持图床，后台上传图片可直链访问及调用
-* simpleui后台管理
-
-
-###### ps: 如果访问网站期间，你使用了某些墙代理网络，会失去一些网页功能 ！！！
+* 战舰炮弹Y向下移动
+* 鱼雷Y向上移动
+* 深水炸弹Y向上移动
+* 鱼雷潜艇X向右移动
+* 深水炸弹潜艇X向右移动
+* 侦查潜艇X向右移动
+* 
 
 ## ⬇ 源码下载
 ```
@@ -56,24 +43,20 @@ or
 https://github.com/muyiafa/Game_DeepSeaKiller.git
 ```
 敏感词文件内容 
-com.muyiafa.submarine.GameWorld,//运行类
-Battleship ship = new Battleship();//声明一个战舰类型的变量
-Bomb bombs[] = {};//声明一个深水炸弹类型的数组变量
-SeaObject[] submarines = {};//代表三种潜艇：侦查潜艇、鱼雷潜艇、水雷潜艇
-SeaObject[] thunders = {};//代表两种雷
+GameWorld
+Battleship
+Bomb
+SeaObject
+SeaObject
 
 ### 安装
 ```
 1：下载项目IDEA打开
-2-1：运行GameWorld类
 ```
 
 ### 使用
 ```
-# 初始化
-
-
-# 常见报错：
+运行GameWorld类
 ```
 ### END:
 
@@ -82,4 +65,4 @@ SeaObject[] thunders = {};//代表两种雷
 请移步 [wikis](https://www.yangmufa.com) 查看
 
 ## ❓ 问题相关
-欢迎提交问题到 [Issues](https://gitee.com/wu_cl/DBlog/issues) 或邮箱 `email@yangmufa.com`, 欢迎一起交流
+欢迎提交问题到 [Issues](https://gitee.com/muyiafa/Game_DeepSeaKiller/issues) 或邮箱 `email@yangmufa.com`, 欢迎一起交流
