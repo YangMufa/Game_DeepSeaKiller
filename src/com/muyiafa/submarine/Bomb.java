@@ -26,7 +26,7 @@ public class Bomb extends SeaObject{
     }
 
     @Override
-    public boolean isoutBunds(){
-        return this.y >= GameWorld.WIDTH;//如果当前深水炸弹对象的y大于等于窗口的高
+    public boolean isoutBounds(){
+        return this.y >= GameWorld.HEIGHT;//如果当前深水炸弹对象的y大于等于窗口的高
     }
 }

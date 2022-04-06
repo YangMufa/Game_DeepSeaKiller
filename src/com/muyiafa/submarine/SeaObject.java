@@ -13,7 +13,7 @@ public abstract class SeaObject {
     public static  final int LIVE=0;//活着的状态
     public static  final int DEAD=1;//死亡的状态
 
-    public int currentState=0;//默认初始化对象都是活着的状态
+    public int currentState=LIVE;//默认初始化对象都是活着的状态
 
 
     //抽象类不能创建对象
@@ -67,6 +67,14 @@ public abstract class SeaObject {
     abstract void step();
 
     /**
+     * 因为每个子类都需要进行获取图片,那么就将获取图片的行为提取到父类中
+     * 因为每个子类获取图片的逻辑是不一样的 所以做一个抽象方法
+     * 返回值是 图片类型
+     * 获取图片的抽象方法  供具体子类重写实现返回对应的图片
+     */
+    public abstract ImageIcon getImage();
+
+    /**
      * 因为每个子类都需要进行绘制，那么就将绘制的行为提取到父类中
      * 因为每逢个子类绘制的逻辑都是一样的，所以做成一个普通方法
      * 参数需要一个画笔，通过外部调用方法是传递一个画笔
@@ -87,7 +95,6 @@ public abstract class SeaObject {
         //创建雷对象之前，要先将鱼雷对象的 x 、 y 坐标算出来
         int x = this.x + this.width;
         int y = this.y - 5;
-
         //instaceof 关键字的作用：判断 是否是某个类型 的语法
         if (this instanceof MineSubmarine) {
             return new Mine(x, y);//返回水雷
@@ -98,20 +105,10 @@ public abstract class SeaObject {
         }
     }
 
-
-    /**
-     *因为每个子类都需要进行获取图片，那么就将获取图片的行为提取到父类中
-     *因为每逢个子类获取图片的逻辑都是一样的，所以做成一个抽象法
-     * 返回值是图片类型
-     * 获取图片的抽象方法 供具体子类重写实现返回对应的照片
-     * @return
-     */
-    public abstract ImageIcon getImage();
-
     //判断潜艇、雷是否越界的方法
     //三种潜艇的判断是否越界的标准是一样的，可以复用
     //其他三个类，深水炸弹，鱼雷 不一样 则自行重写即可
-    public boolean isoutBunds(){
+    public boolean isoutBounds(){
         return this.x >= GameWorld.WIDTH;//判断潜艇是否超出屏幕的宽
     }
 

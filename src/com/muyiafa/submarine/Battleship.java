@@ -14,6 +14,15 @@ public class Battleship extends SeaObject{
         life=5;//游戏开始五条命
     }
 
+    //左移
+    public void leftMove(){
+        this.x -= speed;
+    }
+    //右移
+    public void rightMove(){
+        this.x += speed;
+    }
+
     @Override
     void step() {
         System.out.println("战舰通过键盘左右移动...");

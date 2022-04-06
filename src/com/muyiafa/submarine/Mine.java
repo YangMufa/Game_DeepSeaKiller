@@ -25,7 +25,7 @@ public class Mine extends SeaObject {
     }
 
     @Override
-    public boolean isoutBunds() {
+    public boolean isoutBounds() {
         return this.y<= 150- this.height;//如果水雷的高小于等于水平面水雷图的高
     }
 }

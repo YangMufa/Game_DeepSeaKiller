@@ -26,7 +26,7 @@ public class Torpedo extends SeaObject{
     }
 
     @Override
-    public boolean isoutBunds() {
+    public boolean isoutBounds() {
         return this.y <= -this.height;//如果当前鱼雷对象的y小于等于负自身图片的高
     }
 }
