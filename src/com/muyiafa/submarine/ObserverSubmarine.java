@@ -7,7 +7,7 @@ import javax.swing.*;
  *      是模板 放战舰对象所有公共的属性和行为
  */
 
-public class ObserverSubmarine extends SeaObject{
+public class ObserverSubmarine extends SeaObject implements EnemyScore{
 
     ObserverSubmarine(){
 //        width=63;
@@ -29,5 +29,10 @@ public class ObserverSubmarine extends SeaObject{
             return ImageResources.obsersubm;//返回侦查潜艇图片
         }
         return null;//如果能执行到此处，说明当前对象是死亡状态，返回null
+    }
+
+    @Override
+    public int getScore() {
+        return 10;
     }
 }

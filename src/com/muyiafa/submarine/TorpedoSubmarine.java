@@ -6,7 +6,7 @@ import javax.swing.*;
  * 鱼雷潜艇类
  *      是模板 放战舰对象所有公共的属性和行为
  */
-public class TorpedoSubmarine extends SeaObject{
+public class TorpedoSubmarine extends SeaObject implements EnemyScore{
 
     TorpedoSubmarine(){
 //        width=64;
@@ -28,5 +28,9 @@ public class TorpedoSubmarine extends SeaObject{
             return ImageResources.torpedosubm;//返回鱼雷潜艇图片
         }
         return null;//如果能执行到此处，说明当前对象是死亡状态，返回null
+    }
+    @Override
+    public int getScore() {
+        return 10;
     }
 }

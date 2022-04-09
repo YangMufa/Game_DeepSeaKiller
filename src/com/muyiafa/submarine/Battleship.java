@@ -8,10 +8,24 @@ import javax.swing.*;
  */
 
 public class Battleship extends SeaObject{
-    int life;//命数
+    private int life;//命数
+    public int getLife(){//提供获取战舰命数的方法
+        return life;
+    }
+    public void setLife(){//提供散装战舰命数的方法
+        if (life > 0) {
+            this.life += life;//为当前对象的life累加命数
+        }
+    }
+    public void subtractLife(){//提供散装战舰命数的方法
+        if (life >0) {
+            this.life--;//当前对象的life减一
+        }
+    }
+
     Battleship(){//无参构造方法
         super(270,124,66,26,20);
-        life=5;//游戏开始五条命
+        life=15;//游戏开始五条命
     }
 
     //左移

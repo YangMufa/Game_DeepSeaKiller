@@ -98,25 +98,59 @@ public class GameWorld extends JPanel {
         //1、遍历潜艇数组并在循环里面判断当前潜艇数组的每个对象是否越界
         //2、若成立则将当前对象剔除出数组中
         //3、将数组最后一个元素赋值给当前越界的元素空间（替换）
-        //4、
         for (int i = 0; i < submarines.length; i++) {
-            if (submarines[i].isoutBounds()) {
+            if (submarines[i].isoutBounds()||submarines[i].isDead()) {//判断当前潜艇数组的每个对象存活状态
                 submarines[i] = submarines[submarines.length - 1];
                 submarines = Arrays.copyOf(submarines, submarines.length - 1);
             }
         }
 //        遍历雷的数组
         for (int i = 0; i < thunders.length; i++) {
-            if (thunders[i].isoutBounds()) {
+            if (thunders[i].isoutBounds()||thunders[i].isDead()) {
                 thunders[i] = thunders[thunders.length - 1];
                 thunders = Arrays.copyOf(thunders, thunders.length - 1);
             }
         }
 //        遍历深水炸弹的数组
         for (int i = 0; i < bombs.length; i++) {
-            if (bombs[i].isoutBounds()) {
+            if (bombs[i].isoutBounds()||bombs[i].isDead()) {
                 bombs[i] = bombs[bombs.length - 1];
                 bombs = Arrays.copyOf(bombs, bombs.length - 1);
+            }
+        }
+    }
+
+    /**
+     * 深水炸弹与潜艇的碰撞检测具体使用，最后放在run中调用
+     */
+    int score=0;
+    public void bombBangAction(){
+        for (int i = 0; i < bombs.length; i++) {//轮数
+            Bomb b = bombs[i];//获取当前深水炸弹对象
+            for (int j = 0; j < submarines.length; j++) {//次数
+                SeaObject s = submarines[j];//获取当前潜艇数组中的对象
+                //如果当前深水炸弹对象是活着的并且当前潜艇对象也是活着的才去调用相互检测
+                if (b.isLive() && s.isLive() && b.isHit(s)) {//检测判断碰撞
+                    b.goDead();
+                    s.goDead();
+                    if (s instanceof ObserverSubmarine) {
+                        ObserverSubmarine os =(ObserverSubmarine) s;
+                        score += os.getScore();
+                    }else if(s instanceof TorpedoSubmarine){
+                        TorpedoSubmarine ts =(TorpedoSubmarine) s;
+                        score +=ts.getScore();
+                    }
+                }
+            }
+        }
+    }
+
+    //雷与战舰的碰撞检测具体使用，最后放在run中调用
+    public  void thunderBangAction(){
+        for (int i = 0; i < thunders.length; i++) {
+            if (thunders[i].isLive() && thunders[i].isHit(ship)) {//如果过类对象是活着的状态并且雷对象与战舰碰到的话
+                thunders[i].goDead();//当前雷对象消失
+                ship.subtractLife();
             }
         }
     }
@@ -151,14 +185,14 @@ public class GameWorld extends JPanel {
                 thunderEnterAction();//调用雷入场的方法
                 stepAction();//调用移动的方法
                 outOfBounds();//调用删除优化对象的方法
-                System.out.println(submarines.length + "当前潜艇在内存中的数量" + "，雷在内存中的数量" + thunders.length);
+                bombBangAction();//检测(╯‵□′)╯炸弹！•••*～●和潜艇的碰撞
+                thunderBangAction();//检测雷和战舰的碰撞
+//                System.out.println(submarines.length + "当前潜艇在内存中的数量" + "，雷在内存中的数量" + thunders.length);
                 repaint();//刷新绘制
             }
         };
         //1、具体执行的任务  2、延时多久开始第一次执行(毫秒) 3、执行第一次以后下次执行的间隔时间(毫秒)
         timer.schedule(task, 5000, 10);
-
-
     }
 
     void paintWorld() {
@@ -184,7 +218,7 @@ public class GameWorld extends JPanel {
 
         ship.paintImage(g);//绘制战舰
         for (int i = 0; i < submarines.length; i++) {
-            submarines[i].paintImage(g);//绘制潜艇数组中所有对象
+            submarines[i].paintImage(g);//绘制潜艇数组中所有对象;
         }
 
         for (int i = 0; i < thunders.length; i++) {
@@ -194,6 +228,10 @@ public class GameWorld extends JPanel {
         for (int i = 0; i < bombs.length; i++) {
             bombs[i].paintImage(g);//绘制深水炸弹数组的所有对象
         }
+        //绘制命数
+        g.drawString("Life:"+ship.getLife(),400,50);
+        //绘制分数
+        g.drawString("Score"+score,200,50);
     }
 
     public static void main(String[] args) {

@@ -8,7 +8,12 @@ import java.awt.*;
  * 所有海洋类对象的父类
  */
 
-public abstract class SeaObject {
+public abstract class SeaObject implements EnemyLife{
+
+    @Override
+    public int getLife() {
+        return 1;
+    }
 
     public static  final int LIVE=0;//活着的状态
     public static  final int DEAD=1;//死亡的状态
@@ -110,6 +115,24 @@ public abstract class SeaObject {
     //其他三个类，深水炸弹，鱼雷 不一样 则自行重写即可
     public boolean isoutBounds(){
         return this.x >= GameWorld.WIDTH;//判断潜艇是否超出屏幕的宽
+    }
+
+    public boolean isHit(SeaObject other){
+        //this
+        //other
+        int x1 = this.x - other.width;
+        int x2 = this.x + this.width;
+        int y1 = this.y - other.height;
+        int y2 = this.y + this.height;
+        int x = other.x;
+        int y = other.y;
+        //如果传入对象的x在x1和x2之间，y在y1和y2之间，则返回true即代表撞上了
+        return (x>=x1 && x<= x2)&&(y>=y1 && y<=y2);
+    }
+
+    //那个对象打点去掉这个方法就把那个对象设置为死亡状态
+    public void goDead(){
+        this.currentState = DEAD;//设置状态为死亡状态
     }
 
 }
