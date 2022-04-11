@@ -18,6 +18,11 @@ public class GameWorld extends JPanel {
     public static final int WIDTH = 641;//宽
     public static final int HEIGHT = 479;//高
 
+    public static final int START = 0;//开始状态
+    public static final int RUNNING = 1;//运行状态
+    public static final int GAME_OVER = 2;//结束状态
+    private int currentState = START;//默认是开始状态
+
     Battleship ship = new Battleship();//声明一个战舰类型的变量
 
     Bomb bombs[] = {};//声明一个深水炸弹类型的数组变量
@@ -51,7 +56,6 @@ public class GameWorld extends JPanel {
             //3、将对象赋值给数组中下标最后一个空间
             submarines[submarines.length - 1] = obj;
         }
-
     }
 
     //控制雷入场的方法-放到run中
@@ -68,7 +72,6 @@ public class GameWorld extends JPanel {
             }
         }
     }
-
 
     //所有潜艇、雷的移动方法
     public void stepAction() {
@@ -131,14 +134,15 @@ public class GameWorld extends JPanel {
                 SeaObject s = submarines[j];//获取当前潜艇数组中的对象
                 //如果当前深水炸弹对象是活着的并且当前潜艇对象也是活着的才去调用相互检测
                 if (b.isLive() && s.isLive() && b.isHit(s)) {//检测判断碰撞
-                    b.goDead();
-                    s.goDead();
-                    if (s instanceof ObserverSubmarine) {
-                        ObserverSubmarine os =(ObserverSubmarine) s;
-                        score += os.getScore();
-                    }else if(s instanceof TorpedoSubmarine){
-                        TorpedoSubmarine ts =(TorpedoSubmarine) s;
-                        score +=ts.getScore();
+                    b.goDead();//
+                    s.goDead();//
+                    if(s instanceof EnemyScore){//判断当前s这个潜艇对象 有没有实现EnemyScore接口
+                        EnemyScore addScore= (EnemyScore)s;//直接把s强转成EnemyScore接口类型
+                        //编译期间调父  运行时执行子。
+                        score += addScore.getScore();//具体运行时使用的是侦察潜艇还是鱼雷潜艇 要看 地址指向的是哪个对象
+                    } else if(s instanceof EnemyLife ){//判断当前s这个潜艇对象 有没有实现EnemyLife接口
+                        EnemyLife addLife = (EnemyLife)s;
+                        ship.setLife(addLife.getLife());
                     }
                 }
             }
@@ -155,6 +159,13 @@ public class GameWorld extends JPanel {
         }
     }
 
+    //检测游戏是否结束的方法，实时检测放在run中
+    public void checkGameOverAction(){
+        if (ship.getLife() <= 0) {//如果战舰的命数小于等于0
+            currentState = GAME_OVER;//切换状态为游戏结束
+        }
+    }
+
     //用来测试的方法
     void action() {
 
@@ -165,7 +176,11 @@ public class GameWorld extends JPanel {
                 //通过KeyEvent类直接访问键盘的按键
                 //通过参数e里面提供的一份方法getKeycode() 来获取用户当前按下的按键是什么
                 if (e.getKeyCode() == KeyEvent.VK_SPACE) {//判断用户按下的是不是空格键
-                    bombEnterAction();//发射深水炸弹
+                    if (currentState == START) {//判断当前状态是不是开始状态
+                        currentState = RUNNING;//切换当前状态我运行状态
+                    }else {
+                        bombEnterAction();//否则发射深水炸弹
+                    }
                 }
                 if (e.getKeyCode() == KeyEvent.VK_LEFT) {//判断用户按下的键盘是不是左移动
                     ship.leftMove();//调用战舰对象左移动
@@ -181,14 +196,17 @@ public class GameWorld extends JPanel {
         TimerTask task = new TimerTask() {
             @Override
             public void run() { //自定义的任务逻辑方法
-                submarineEnterAction();//调用潜艇入场的方法
-                thunderEnterAction();//调用雷入场的方法
-                stepAction();//调用移动的方法
-                outOfBounds();//调用删除优化对象的方法
-                bombBangAction();//检测(╯‵□′)╯炸弹！•••*～●和潜艇的碰撞
-                thunderBangAction();//检测雷和战舰的碰撞
+                if(currentState == RUNNING) {//如果当前状态是运行状态
+                    submarineEnterAction();//调用潜艇入场的方法
+                    thunderEnterAction();//调用雷入场的方法
+                    stepAction();//调用移动的方法
+                    outOfBounds();//调用删除优化对象的方法
+                    bombBangAction();//检测(╯‵□′)╯炸弹！•••*～●和潜艇的碰撞
+                    thunderBangAction();//检测雷和战舰的碰撞
+                    checkGameOverAction();//调用检测是否游戏结束的方法
 //                System.out.println(submarines.length + "当前潜艇在内存中的数量" + "，雷在内存中的数量" + thunders.length);
-                repaint();//刷新绘制
+                    repaint();//刷新绘制
+                }
             }
         };
         //1、具体执行的任务  2、延时多久开始第一次执行(毫秒) 3、执行第一次以后下次执行的间隔时间(毫秒)
@@ -214,32 +232,36 @@ public class GameWorld extends JPanel {
 //        // 1、填 null 2、填g 3、填x 4、填y
 //        ship.paintIcon(null,g,270,124);
         // 填 null ，填 g ， 3.0 3.4
-        ImageResources.sea.paintIcon(null,g,0,0);//海洋背景
-
-        ship.paintImage(g);//绘制战舰
-        for (int i = 0; i < submarines.length; i++) {
-            submarines[i].paintImage(g);//绘制潜艇数组中所有对象;
+        if (currentState == START) {//当前状态如果是开始状态
+            //绘制启动页面
+            ImageResources.start.paintIcon(null, g, 0, 0);//海洋背景
+            //绘制开始提示
+            g.drawString("按空格键开始游戏", 280, 65);
+        } else if (currentState == RUNNING) {//当前状态如果是运行状态
+            ImageResources.sea.paintIcon(null, g, 0, 0);//海洋背景
+            ship.paintImage(g);//绘制战舰
+            for (int i = 0; i < submarines.length; i++) {
+                submarines[i].paintImage(g);//绘制潜艇数组中所有对象;
+            }
+            for (int i = 0; i < thunders.length; i++) {
+                thunders[i].paintImage(g);//绘制雷组中所有对象
+            }
+            for (int i = 0; i < bombs.length; i++) {
+                bombs[i].paintImage(g);//绘制深水炸弹数组的所有对象
+            }
+            //绘制命数
+            g.drawString("Life:" + ship.getLife(), 400, 50);
+            //绘制分数
+            g.drawString("Score" + score, 200, 50);
+        }else if (currentState == GAME_OVER) {
+            ImageResources.gameover.paintIcon(null,g,0,0);
         }
-
-        for (int i = 0; i < thunders.length; i++) {
-            thunders[i].paintImage(g);//绘制雷组中所有对象
-        }
-
-        for (int i = 0; i < bombs.length; i++) {
-            bombs[i].paintImage(g);//绘制深水炸弹数组的所有对象
-        }
-        //绘制命数
-        g.drawString("Life:"+ship.getLife(),400,50);
-        //绘制分数
-        g.drawString("Score"+score,200,50);
     }
 
     public static void main(String[] args) {
-
         GameWorld gw= new GameWorld();
         gw.action();
         gw.paintWorld();
-
     }
 }
 

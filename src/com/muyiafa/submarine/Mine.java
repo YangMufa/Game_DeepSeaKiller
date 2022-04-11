@@ -1,5 +1,4 @@
 package com.muyiafa.submarine;
-
 import javax.swing.*;
 
 /**

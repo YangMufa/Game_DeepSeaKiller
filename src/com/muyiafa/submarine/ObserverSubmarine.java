@@ -8,7 +8,6 @@ import javax.swing.*;
  */
 
 public class ObserverSubmarine extends SeaObject implements EnemyScore{
-
     ObserverSubmarine(){
 //        width=63;
 //        height=19;

@@ -9,7 +9,6 @@ import java.awt.*;
  */
 
 public abstract class SeaObject implements EnemyLife{
-
     @Override
     public int getLife() {
         return 1;
@@ -17,9 +16,7 @@ public abstract class SeaObject implements EnemyLife{
 
     public static  final int LIVE=0;//活着的状态
     public static  final int DEAD=1;//死亡的状态
-
     public int currentState=LIVE;//默认初始化对象都是活着的状态
-
 
     //抽象类不能创建对象
 //    SeaObject s = SeaObject();
@@ -134,5 +131,4 @@ public abstract class SeaObject implements EnemyLife{
     public void goDead(){
         this.currentState = DEAD;//设置状态为死亡状态
     }
-
 }
