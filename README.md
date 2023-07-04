@@ -57,7 +57,7 @@ personalWebsite：https://www.muyiafa.com
 
 ### 使用
 ```
-运行GameWorld类
+运行 src/com/muyiafa/submarine/GameWorld.java
 ```
 ### END:
 
